@@ -1,0 +1,33 @@
+# inspired by the rrbot tutorial
+
+kuka_youbot:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+  
+  # Position Controllers ---------------------------------------
+
+  # arm joints (ignoring the one between the base link and the arm_0_link)
+
+  # arm links 0-5
+  arm1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: arm_joint_1
+    pid: {p: 10.0, i: 0.01, d: 2.0}
+  arm2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: arm_joint_2
+    pid: {p: 10.0, i: 0.01, d: 2.0}
+  arm3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: arm_joint_3
+    pid: {p: 10.0, i: 0.01, d: 2.0}
+  arm4_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: arm_joint_4
+    pid: {p: 10.0, i: 0.01, d: 2.0}
+  arm5_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: arm_joint_5
+    pid: {p: 10.0, i: 0.01, d: 2.0}

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- use the gazebo_ros launcher for our purposes -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- load joints to parameter server -->
+  <rosparam command="load" file="$(find youbot_gazebo)/config/youbot_arm_gazebo.yaml" />
+
+  <!-- load robot urdf -->
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find youbot_gazebo)/urdf/youbot.urdf.xacro" />
+
+  <!-- load the controllers (needed for gazebo to act on robot) -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/kuka_youbot" args="arm1_position_controller arm2_position_controller arm3_position_controller arm4_position_controller arm5_position_controller joint_state_controller"/>
+
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    respawn="false" output="screen">
+    <remap from="/joint_states" to="/kuka_youbot/joint_states" />
+  </node>
+
+  <!-- Spawn a robot into Gazebo  -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model kuka_youbot" />
+
+  <!-- Start up rviz -->
+
+  <param name="use_gui" value="true" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find industrial_robot_client)/config/robot_state_visualize.rviz" required="true" />
+
+
+
+</launch>
